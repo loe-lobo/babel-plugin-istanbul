@@ -17,7 +17,7 @@ function makeShouldSkip () {
   let exclude
   return function shouldSkip (file, opts) {
     if (!exclude || exclude.cwd !== opts.cwd) {
-      const cwd = getRealpath(process.env.NYC_CWD || process.cwd())
+      const cwd = getRealpath(opts.cwd || process.env.NYC_CWD || process.cwd())
       const nycConfig = process.env.NYC_CONFIG ? JSON.parse(process.env.NYC_CONFIG) : {}
 
       let config = {}
@@ -67,7 +67,8 @@ function makeVisitor ({types: t}) {
           }
           this.__dv__ = programVisitor(t, realPath, {
             coverageVariable: '__coverage__',
-            inputSourceMap
+            inputSourceMap,
+            ignoreClassMethods: this.opts.ignoreClassMethods || []
           })
           this.__dv__.enter(path)
         },
